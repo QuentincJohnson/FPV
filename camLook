@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class camLook : MonoBehaviour {
+
+    //vecter Declerations
+    Vector2 mouseLook;//the mouse location
+    Vector2 smooth;//used to smooth the mouse movment
+
+    //float Declerations
+    public float sensitivity = 5.0f;//controlls how fast the mouse moves
+    public float smoothing = 2.0f;//controlls level of smoothing
+
+    //declares an eempty object that will be your charecter
+    GameObject charecter;
+
+	// Use this for initialization
+	void Start () {
+
+        //making charecter == YOUR charecter 
+        charecter = this.transform.parent.gameObject;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+        //change in mouse movment
+        var md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+        //applying the chosen sensitivity and smoothing amount
+        md = Vector2.Scale(md, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
+
+        //uses change in mouse movment to find how much smothing is needed
+        smooth.x = Mathf.Lerp(smooth.x, md.x, 1f / smoothing);
+        smooth.y = Mathf.Lerp(smooth.y, md.y, 1f / smoothing);
+
+        //changes mouse location accordingly
+        mouseLook += smooth;
+
+        mouseLook.y = Mathf.Clamp(mouseLook.y, -90f, 90f);
+
+        //responsible for rotating your charecter modle aswell (the capsul) so not only the camra is being rotated.
+        transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+        charecter.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, Vector3.up);
+	}
+}
