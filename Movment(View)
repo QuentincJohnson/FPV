@@ -1,0 +1,35 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class View : MonoBehaviour
+{
+
+    public float speed = 10.0f; //movement speed
+
+    // Use this for initialization
+    void Start()
+    {
+        //deletes the mouse from view 
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float translation = Input.GetAxis("Vertical") * speed; //movment side to side
+        float straffe = Input.GetAxis("Horizontal") * speed; // movment forward and backwords
+
+        translation *= Time.deltaTime;
+        straffe *= Time.deltaTime;
+
+        //changing players position
+        transform.Translate(straffe, 0, translation);
+
+        if (Input.GetKeyDown("escape"))
+        {
+            //quits application if excape is pressed aswell as makes the mouse re appear 
+            Cursor.lockState = CursorLockMode.None;
+            Application.Quit();
+        }
+    }
